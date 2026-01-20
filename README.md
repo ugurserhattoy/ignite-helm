@@ -12,3 +12,7 @@ Apache Ignite is an open-source distributed database, caching and processing pla
 ```sh
 helm install apache-ignite . --namespace <namespace>
 ```
+
+### Future plans
+- v3 support
+- more jvm and jmx confs to be controlled by values.yaml
