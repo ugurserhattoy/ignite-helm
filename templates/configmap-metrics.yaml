@@ -1,0 +1,53 @@
+{{- if .Values.metrics.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "ignite.fullname" . }}-metrics
+  labels:
+    app: {{ include "ignite.fullname" . }}
+data:
+  jmx-exporter.yaml: |
+    startDelaySeconds: 10
+    lowercaseOutputName: true
+    lowercaseOutputLabelNames: true
+
+    rules:
+      # JVM memory
+      - pattern: 'java.lang<type=Memory><>(HeapMemoryUsage|NonHeapMemoryUsage)'
+        name: jvm_memory_usage
+        type: GAUGE
+        labels:
+          area: "$1"
+
+      # JVM GC
+      - pattern: 'java.lang<type=GarbageCollector,name=(.+)><>CollectionCount'
+        name: jvm_gc_collection_count
+        type: COUNTER
+        labels:
+          gc: "$1"
+
+      - pattern: 'java.lang<type=GarbageCollector,name=(.+)><>CollectionTime'
+        name: jvm_gc_collection_time_ms
+        type: COUNTER
+        labels:
+          gc: "$1"
+
+      # Threads
+      - pattern: 'java.lang<type=Threading><>(ThreadCount|DaemonThreadCount|PeakThreadCount)'
+        name: jvm_threads
+        type: GAUGE
+        labels:
+          type: "$1"
+
+      # Ignite cache metrics
+      - pattern: 'org.apache.ignite<name=cache.(.+),type=CacheMetrics><>(CacheHits|CacheMisses|CacheGets|CachePuts)'
+        name: ignite_cache_$2
+        type: COUNTER
+        labels:
+          cache: "$1"
+
+      # Ignite cluster metrics
+      - pattern: 'org.apache.ignite<type=ClusterMetrics><>(ActiveJobs|ActiveTasks|TotalExecutedJobs)'
+        name: ignite_cluster_$1
+        type: GAUGE
+{{- end }}

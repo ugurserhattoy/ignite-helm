@@ -1,0 +1,59 @@
+# Default values for ignite.
+replicaCount: 1
+
+image:
+  repository: apacheignite/ignite
+  tag: 2.16.0-jdk11
+  pullPolicy: IfNotPresent
+imagePullSecrets: {}
+# If imagePullSecrets needed remove {} and uncomment below to set your secret name
+# - name: <your-image-pull-secret>
+
+# Chart name override
+nameOverride: ""
+# Fullname override
+fullnameOverride: ""
+# Fullname suffix (won't work together with fullnameOverride)
+fullnameSuffix: ""
+
+persistence:
+  enabled: true
+  size: 1Gi
+  provisioner: cluster.local/nfs-subdir-external-provisioner
+  provisioner_parameters:
+          archiveOnDelete: "true"
+
+wal_persistence:
+  enabled: true
+  size: 1Gi
+  provisioner: cluster.local/nfs-subdir-external-provisioner
+  provisioner_parameters:
+          archiveOnDelete: "true"
+
+# We usually recommend not to specify default resources and to leave this as a conscious
+# choice for the user. This also increases chances charts run on environments with little
+# resources, such as Minikube. If you do want to specify resources, uncomment the following
+# lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+resources: {}
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+# Service configuration for Ignite metrics
+metrics:
+  enabled: false
+  # TODO: ClusterIP and Loadbalancer option will be added.
+  # If metrics enabled, you can specify a NodePort value below.
+  service:
+    type: NodePort
+    port: 9404
+    nodePort: null
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
