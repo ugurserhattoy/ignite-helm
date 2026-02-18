@@ -89,6 +89,7 @@ data:
                         <bean class="org.apache.ignite.spi.discovery.tcp.ipfinder.kubernetes.TcpDiscoveryKubernetesIpFinder">
                             <property name="namespace" value="{{ .Release.Namespace }}"/>
                             <property name="serviceName" value="{{ include "ignite.fullname" . }}"/>
+                            <property name="masterUrl" value="https://kubernetes.default.svc.{{ .Values.kubernetesClusterDomain }}:443"/>
                         </bean>
                     </property>
                 </bean>

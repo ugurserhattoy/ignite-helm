@@ -12,6 +12,12 @@ data:
     lowercaseOutputLabelNames: true
 
     rules:
+      # JVM runtime
+      - pattern: 'java.lang<type=Runtime><>(Uptime|StartTime)'
+      - pattern: 'java.lang<type=OperatingSystem><>(.*)'
+      - pattern: 'java.lang<type=Threading><>(.*)'
+      - pattern: 'java.lang<type=ClassLoading><>(LoadedClassCount|UnloadedClassCount|TotalLoadedClassCount)'
+      
       # JVM memory
       - pattern: 'java.lang<type=Memory><>(HeapMemoryUsage|NonHeapMemoryUsage)'
         name: jvm_memory_usage
@@ -33,11 +39,11 @@ data:
           gc: "$1"
 
       # Threads
-      - pattern: 'java.lang<type=Threading><>(ThreadCount|DaemonThreadCount|PeakThreadCount)'
-        name: jvm_threads
-        type: GAUGE
-        labels:
-          type: "$1"
+      # - pattern: 'java.lang<type=Threading><>(ThreadCount|DaemonThreadCount|PeakThreadCount)'
+      #   name: jvm_threads
+      #   type: GAUGE
+      #   labels:
+      #     type: "$1"
 
       # Ignite cache metrics
       - pattern: 'org.apache.ignite<name=cache.(.+),type=CacheMetrics><>(CacheHits|CacheMisses|CacheGets|CachePuts)'

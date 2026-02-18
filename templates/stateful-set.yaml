@@ -36,7 +36,7 @@ spec:
 {{- if .Values.metrics.enabled }}
       initContainers:
         - name: jmx-exporter-init
-          image: busybox:1.36
+          image: "{{ .Values.jmx_exporter.image.repository }}:{{ .Values.jmx_exporter.image.tag }}"
           command:
             - sh
             - -c
@@ -66,7 +66,7 @@ spec:
             -javaagent:/opt/jmx/jmx_prometheus_javaagent.jar={{ .Values.metrics.service.port }}:/opt/jmx/config/jmx-exporter.yaml
             {{- end }}
         - name: CONFIG_URI
-          value: file:///opt/ignite/apache-ignite-fabric/config/default-config.xml
+          value: file:///opt/ignite/apache-ignite/config/default-config.xml
         - name: IGNITE_ENABLE_EXPERIMENTAL_COMMAND
           value: "true" 
         ports:
@@ -91,7 +91,7 @@ spec:
           name: ignite-persistence
 {{- end }}
         - name: config-volume
-          mountPath: /opt/ignite/apache-ignite-fabric/config
+          mountPath: /opt/ignite/apache-ignite/config
 {{- if .Values.metrics.enabled }}
         - name: jmx-exporter
           mountPath: /opt/jmx
